@@ -36,6 +36,7 @@ dependencies {
     implementation libs.rx.android
 
     implementation libs.network.retrofit
+    implementation libs.network.convertor
     implementation libs.network.gson
 
     implementation libs.dagger.core
@@ -50,6 +51,7 @@ dependencies {
     implementation libs.ui.circleimageview
 
     implementation libs.misc.picasso
+    implementation libs.misc.stetho
 
     implementation libs.arc.ext
 }

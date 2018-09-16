@@ -58,7 +58,8 @@ ext {
             ],
             network : [
                     retrofit    : "$retorfit_package:retrofit:$retrofit_version",
-                    gson          : "com.google.code.gson:gson:2.8.1"
+                    convertor   : "$retorfit_package:converter-gson:$retrofit_version",
+                    gson        : "com.google.code.gson:gson:2.8.1"
             ],
             room    : [
                     runtime  : "$room_package:runtime:$room_version",
@@ -67,6 +68,7 @@ ext {
             ],
             misc    : [
                     picasso       : "com.squareup.picasso:picasso:2.5.2",
+                    stetho        : "com.facebook.stetho:stetho:1.5.0"
             ],
             ui      : [
                     circleimageview: "de.hdodenhof:circleimageview:2.2.0",
