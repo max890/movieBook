@@ -72,16 +72,22 @@ public class SearchFragmentPresenterImpl extends SearchFragmentPresenter {
         Disposable disposable = api.searchMovies(search, page)
                 .compose(RxUtils.asyncSingle())
                 .subscribe(searchMovieModel -> {
-                    this.movies.addAll(searchMovieModel.getSearch());
-                    loading = false;
-                    lastPage = (searchMovieModel.getTotalResults() - movies.size())%10 < 1;
-                    runOnView(item -> {
-                        item.setItems(this.movies);
-                    }, true);
-                    Observable.fromIterable(movies)
-                            .map(shortMovieModel -> movieDao.insert(shortMovieModel))
-                            .compose(RxUtils.asyncObservable())
-                            .subscribe();
+                    if (!searchMovieModel.getResponse()) {
+                        runOnView(item -> {
+                            item.error(searchMovieModel.getError());
+                        }, true);
+                    } else {
+                        this.movies.addAll(searchMovieModel.getSearch());
+                        loading = false;
+                        lastPage = (searchMovieModel.getTotalResults() - movies.size()) % 10 < 1;
+                        runOnView(item -> {
+                            item.setItems(this.movies);
+                        }, true);
+                        Observable.fromIterable(movies)
+                                .map(shortMovieModel -> movieDao.insert(shortMovieModel))
+                                .compose(RxUtils.asyncObservable())
+                                .subscribe();
+                    }
                 });
 
         getCompositeDisposable().add(disposable);

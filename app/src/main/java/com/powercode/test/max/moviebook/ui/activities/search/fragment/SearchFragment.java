@@ -3,6 +3,7 @@ package com.powercode.test.max.moviebook.ui.activities.search.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -76,24 +77,19 @@ public class SearchFragment extends BaseFragment<SearchFragmentView, SearchFragm
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.search_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
-//        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-
         if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
         }
         if (searchView != null) {
-//            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-
             queryTextListener = new SearchView.OnQueryTextListener() {
+
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    Log.i("onQueryTextChange", newText);
-
                     return true;
                 }
+
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-                    Log.i("onQueryTextSubmit", query);
                     searchView.clearFocus();
                     searchView.onActionViewCollapsed();
                     adapter.clearItems();
@@ -119,5 +115,10 @@ public class SearchFragment extends BaseFragment<SearchFragmentView, SearchFragm
     public void setItems(List<? extends ShortMovieModel> items) {
         adapter.swapItems(items);
         binding.foundResult.setText(items.size() == 1 ? getString(R.string.search_result_found_one) : getString(R.string.search_result_found_plural, items.size()));
+    }
+
+    @Override
+    public void error(String error) {
+        Snackbar.make(binding.rootLayout, error, Snackbar.LENGTH_SHORT).show();
     }
 }

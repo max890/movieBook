@@ -8,4 +8,6 @@ import java.util.List;
 public interface SearchFragmentView extends MvpView {
 
     void setItems(List<? extends ShortMovieModel> items);
+
+    void error(String error);
 }
