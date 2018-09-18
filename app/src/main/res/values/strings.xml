@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MovieBook</string>
+
+    <string name="search_result_found_one">Found 1 movie</string>
+    <string name="search_result_found_plural" formatted="false">Found %d movies</string>
+    <string name="not_found">Not found</string>
 </resources>

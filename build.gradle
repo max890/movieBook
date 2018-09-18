@@ -58,6 +58,7 @@ ext {
             ],
             network : [
                     retrofit    : "$retorfit_package:retrofit:$retrofit_version",
+                    adapter     : "$retorfit_package:adapter-rxjava2:$retrofit_version",
                     convertor   : "$retorfit_package:converter-gson:$retrofit_version",
                     gson        : "com.google.code.gson:gson:2.8.1"
             ],

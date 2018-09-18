@@ -22,6 +22,10 @@ android {
     dataBinding {
         enabled true
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -36,6 +40,7 @@ dependencies {
     implementation libs.rx.android
 
     implementation libs.network.retrofit
+    implementation libs.network.adapter
     implementation libs.network.convertor
     implementation libs.network.gson
 

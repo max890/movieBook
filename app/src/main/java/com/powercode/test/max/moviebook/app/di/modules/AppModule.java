@@ -12,7 +12,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.android.support.AndroidSupportInjectionModule;
 
-@Module(includes = {AndroidSupportInjectionModule.class, DbModule.class, RetrofitModule.class})
+@Module(includes = {AndroidSupportInjectionModule.class, DbModule.class, RetrofitModule.class, ComponentsModule.class})
 public abstract class AppModule {
 
     @Binds
