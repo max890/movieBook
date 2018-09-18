@@ -6,23 +6,23 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-import com.powercode.test.max.moviebook.model.entity.DetailsMovieModel;
+import com.powercode.test.max.moviebook.model.entity.ShortMovieModel;
 
 import java.util.List;
 
 @Dao
-public interface DetailsMovieDao {
+public interface ShortMovieDao {
 
     @Query("SELECT * FROM movies")
-    List<DetailsMovieModel> getMovies();
+    List<ShortMovieModel> getMovies();
 
     @Query("SELECT * FROM movies WHERE id = :id")
-    DetailsMovieModel getMovie(String id);
+    ShortMovieModel getMovie(String id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long insert(DetailsMovieModel movie);
+    long insert(ShortMovieModel movie);
 
     @Delete
-    void delete(DetailsMovieModel movie);
+    void delete(ShortMovieModel movie);
 
 }

@@ -1,11 +1,9 @@
 package com.powercode.test.max.moviebook.model.entity;
 
-import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 
 import java.util.List;
 
-@Entity(tableName = "movies")
 public class DetailsMovieModel extends ShortMovieModel {
 
     public String Released;

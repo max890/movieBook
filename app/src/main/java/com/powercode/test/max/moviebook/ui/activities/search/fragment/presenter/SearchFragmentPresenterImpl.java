@@ -3,7 +3,7 @@ package com.powercode.test.max.moviebook.ui.activities.search.fragment.presenter
 import android.text.TextUtils;
 
 import com.powercode.test.max.moviebook.model.api.SearchMovieApi;
-import com.powercode.test.max.moviebook.model.db.dao.DetailsMovieDao;
+import com.powercode.test.max.moviebook.model.db.dao.ShortMovieDao;
 import com.powercode.test.max.moviebook.model.entity.ShortMovieModel;
 import com.powercode.test.max.moviebook.model.utils.RxUtils;
 
@@ -22,7 +22,7 @@ public class SearchFragmentPresenterImpl extends SearchFragmentPresenter {
     SearchMovieApi api;
 
     @Inject
-    DetailsMovieDao movieDao;
+    ShortMovieDao movieDao;
 
     private List<ShortMovieModel> movies;
     private int page;
@@ -78,6 +78,10 @@ public class SearchFragmentPresenterImpl extends SearchFragmentPresenter {
                     runOnView(item -> {
                         item.setItems(this.movies);
                     }, true);
+                    Observable.fromIterable(movies)
+                            .map(shortMovieModel -> movieDao.insert(shortMovieModel))
+                            .compose(RxUtils.asyncObservable())
+                            .subscribe();
                 });
 
         getCompositeDisposable().add(disposable);
@@ -85,7 +89,7 @@ public class SearchFragmentPresenterImpl extends SearchFragmentPresenter {
 
     @Override
     public void nextPage() {
-        if (!loading) {
+        if (!loading && !TextUtils.isEmpty(searchText)) {
             loading = true;
             page++;
             loadPage(searchText);

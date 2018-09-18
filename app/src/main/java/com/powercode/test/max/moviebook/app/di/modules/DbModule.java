@@ -5,9 +5,8 @@ import android.content.Context;
 
 import com.powercode.test.max.moviebook.app.di.qualifiers.AppContext;
 import com.powercode.test.max.moviebook.model.db.AppDatabase;
-import com.powercode.test.max.moviebook.model.db.dao.DetailsMovieDao;
 import com.powercode.test.max.moviebook.model.db.dao.HistoryMovieDao;
-import com.powercode.test.max.moviebook.model.db.dao.RatingMovieDao;
+import com.powercode.test.max.moviebook.model.db.dao.ShortMovieDao;
 
 import javax.inject.Singleton;
 
@@ -28,14 +27,8 @@ public class DbModule {
 
     @Provides
     @Singleton
-    static DetailsMovieDao provideDetailsMovieDao(final AppDatabase database) {
-        return database.detailsMovieDao();
-    }
-
-    @Provides
-    @Singleton
-    static RatingMovieDao provideRatingMovieModel(final AppDatabase database) {
-        return database.ratingMovieDao();
+    static ShortMovieDao provideDetailsMovieDao(final AppDatabase database) {
+        return database.shortMovieDao();
     }
 
     @Provides
