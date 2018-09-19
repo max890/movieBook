@@ -14,4 +14,6 @@ public interface SearchFragmentView extends MvpView {
     void showProgressBar();
 
     void hideProgressBar();
+
+    void openHistory();
 }

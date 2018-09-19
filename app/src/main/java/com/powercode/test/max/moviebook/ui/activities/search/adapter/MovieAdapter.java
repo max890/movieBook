@@ -1,6 +1,7 @@
 package com.powercode.test.max.moviebook.ui.activities.search.adapter;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +16,12 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ShortMovieHolder> {
 
     private List<ShortMovieModel> items = Collections.emptyList();
+    @Nullable
+    private ViewHolderClickDelegate delegate;
+
+    public MovieAdapter(@Nullable ViewHolderClickDelegate delegate) {
+        this.delegate = delegate;
+    }
 
     @NonNull
     @Override
@@ -91,7 +98,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ShortMovieHo
         }
 
         public void onMovieClick() {
-
+            if (delegate != null) {
+                delegate.onItemClick(items.get(getAdapterPosition()));
+            }
         }
+    }
+
+    public interface ViewHolderClickDelegate {
+        void onItemClick(ShortMovieModel item);
     }
 }

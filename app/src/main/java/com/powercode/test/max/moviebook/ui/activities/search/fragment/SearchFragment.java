@@ -24,7 +24,7 @@ import com.powercode.test.max.moviebook.ui.activities.search.fragment.view.Searc
 import java.util.List;
 
 public class SearchFragment extends BaseFragment<SearchFragmentView, SearchFragmentPresenter, FragmentSearchBinding>
-        implements SearchFragmentView {
+        implements SearchFragmentView, MovieAdapter.ViewHolderClickDelegate {
 
 
     MovieAdapter adapter;
@@ -44,7 +44,7 @@ public class SearchFragment extends BaseFragment<SearchFragmentView, SearchFragm
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        adapter = new MovieAdapter();
+        adapter = new MovieAdapter(this);
         binding.recycler.setAdapter(adapter);
         binding.recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -140,5 +140,15 @@ public class SearchFragment extends BaseFragment<SearchFragmentView, SearchFragm
     @Override
     public void hideProgressBar() {
         binding.setProgressBar(false);
+    }
+
+    @Override
+    public void openHistory() {
+
+    }
+
+    @Override
+    public void onItemClick(ShortMovieModel item) {
+
     }
 }
