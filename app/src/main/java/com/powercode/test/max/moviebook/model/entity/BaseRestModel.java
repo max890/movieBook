@@ -7,6 +7,8 @@ public class BaseRestModel {
     String Error;
     @Ignore
     boolean Response;
+    @Ignore
+    int totalResults;
 
     @Ignore
     public String getError() {
@@ -16,5 +18,10 @@ public class BaseRestModel {
     @Ignore
     public boolean getResponse() {
         return Response;
+    }
+
+    @Ignore
+    public int getTotalResults() {
+        return totalResults;
     }
 }
