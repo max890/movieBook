@@ -1,6 +1,8 @@
 package com.powercode.test.max.moviebook.app.di.modules;
 
 import com.powercode.test.max.moviebook.app.di.scopes.PerActivity;
+import com.powercode.test.max.moviebook.ui.activities.history.HistoryActivity;
+import com.powercode.test.max.moviebook.ui.activities.history.HistoryActivityModule;
 import com.powercode.test.max.moviebook.ui.activities.search.SearchActivity;
 import com.powercode.test.max.moviebook.ui.activities.search.SearchActivityModule;
 
@@ -14,4 +16,8 @@ public abstract class ComponentsModule {
     @ContributesAndroidInjector(modules = SearchActivityModule.class)
     @PerActivity
     abstract SearchActivity contributeMainActivity();
+
+    @ContributesAndroidInjector(modules = HistoryActivityModule.class)
+    @PerActivity
+    abstract HistoryActivity contributeHistoryActivity();
 }

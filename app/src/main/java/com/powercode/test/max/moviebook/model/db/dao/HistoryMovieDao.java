@@ -12,8 +12,11 @@ import java.util.List;
 @Dao
 public interface HistoryMovieDao {
 
-    @Query("SELECT * FROM history")
+    @Query("SELECT * FROM history ORDER BY position ASC")
     List<SearchHistoryModel> getHistories();
+
+    @Query("SELECT MAX(position) FROM history")
+    int getMaxPosition();
 
     @Insert
     long insert(SearchHistoryModel historyModel);

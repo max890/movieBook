@@ -1,4 +1,4 @@
-package com.powercode.test.max.moviebook.ui.activities.search.adapter;
+package com.powercode.test.max.moviebook.ui.activities.history.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,36 +7,37 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.powercode.test.max.moviebook.databinding.ItemMovieBinding;
-import com.powercode.test.max.moviebook.model.entity.ShortMovieModel;
+import com.powercode.test.max.moviebook.databinding.ItemRecycleHistoryBinding;
+import com.powercode.test.max.moviebook.model.entity.SearchHistoryModel;
 
 import java.util.Collections;
 import java.util.List;
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ShortMovieHolder> {
+public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryHolder> {
 
-    private List<ShortMovieModel> items = Collections.emptyList();
+    private List<SearchHistoryModel> items = Collections.emptyList();
+
     @Nullable
-    private ViewHolderClickDelegate delegate;
+    private HistoryAdapter.ViewHolderClickDelegate delegate;
 
-    public MovieAdapter(@Nullable ViewHolderClickDelegate delegate) {
+    public HistoryAdapter(HistoryAdapter.ViewHolderClickDelegate delegate) {
         this.delegate = delegate;
     }
 
     @NonNull
     @Override
-    public ShortMovieHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemMovieBinding binding = ItemMovieBinding.inflate(LayoutInflater.from(parent.getContext()),
-            parent, false);
+    public HistoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        ItemRecycleHistoryBinding binding = ItemRecycleHistoryBinding.inflate(LayoutInflater.from(parent.getContext()),
+                parent, false);
 
-        return new ShortMovieHolder(binding);
+        return new HistoryAdapter.HistoryHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ShortMovieHolder holder, int position) {
-        ShortMovieModel model = items.get(position);
+    public void onBindViewHolder(@NonNull HistoryHolder holder, int position) {
+        SearchHistoryModel searchHistoryModel = items.get(position);
         holder.binding.setHolder(holder);
-        holder.binding.setMovie(model);
+        holder.binding.setModel(searchHistoryModel);
     }
 
     @Override
@@ -44,25 +45,19 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ShortMovieHo
         return items.size();
     }
 
-
-    public void swapItems(List<ShortMovieModel> items) {
+    public void swapItems(List<SearchHistoryModel> items) {
         final DiffCallback callback = new DiffCallback(this.items, items);
         final DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback);
         this.items = items;
         result.dispatchUpdatesTo(this);
     }
 
-    public void clearItems() {
-        notifyItemRangeRemoved(0, this.items.size());
-        this.items.clear();
-    }
-
     private static class DiffCallback extends DiffUtil.Callback {
 
-        private final List<ShortMovieModel> oldItems;
-        private final List<ShortMovieModel> newItems;
+        private final List<SearchHistoryModel> oldItems;
+        private final List<SearchHistoryModel> newItems;
 
-        public DiffCallback(List<ShortMovieModel> oldItems, List<ShortMovieModel> newItems) {
+        public DiffCallback(List<SearchHistoryModel> oldItems, List<SearchHistoryModel> newItems) {
             this.oldItems = oldItems;
             this.newItems = newItems;
         }
@@ -79,7 +74,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ShortMovieHo
 
         @Override
         public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            return oldItems.get(oldItemPosition).id.equals(newItems.get(newItemPosition).id);
+            return oldItems.get(oldItemPosition).id == newItems.get(newItemPosition).id;
         }
 
         @Override
@@ -89,16 +84,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ShortMovieHo
 
     }
 
-    public class ShortMovieHolder extends RecyclerView.ViewHolder {
+    public class HistoryHolder extends RecyclerView.ViewHolder {
 
-        ItemMovieBinding binding;
+        ItemRecycleHistoryBinding binding;
 
-        public ShortMovieHolder(ItemMovieBinding binding) {
+        public HistoryHolder(ItemRecycleHistoryBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
-        public void onMovieClick() {
+        public void onItemClick() {
             if (delegate != null) {
                 delegate.onItemClick(items.get(getAdapterPosition()));
             }
@@ -106,6 +101,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ShortMovieHo
     }
 
     public interface ViewHolderClickDelegate {
-        void onItemClick(ShortMovieModel item);
+        void onItemClick(SearchHistoryModel item);
     }
 }
