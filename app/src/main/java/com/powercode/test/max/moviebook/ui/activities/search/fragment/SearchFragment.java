@@ -7,13 +7,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.powercode.test.max.moviebook.R;
+import com.powercode.test.max.moviebook.app.utils.NetworkUtils;
 import com.powercode.test.max.moviebook.databinding.FragmentSearchBinding;
 import com.powercode.test.max.moviebook.model.entity.ShortMovieModel;
 import com.powercode.test.max.moviebook.ui.activities.base.fragment.BaseFragment;
@@ -94,7 +94,12 @@ public class SearchFragment extends BaseFragment<SearchFragmentView, SearchFragm
                     searchView.onActionViewCollapsed();
                     adapter.clearItems();
                     binding.foundResult.setText(R.string.not_found);
-                    presenter.search(query);
+                    if (NetworkUtils.isNetworkConnected(getContext())) {
+                        presenter.search(query);
+                    } else {
+                        Snackbar.make(binding.rootLayout, R.string.disable_network, Snackbar.LENGTH_INDEFINITE)
+                                .setAction(R.string.retry, (view) -> presenter.search(query)).show();
+                    }
                     return true;
                 }
             };
@@ -112,13 +117,28 @@ public class SearchFragment extends BaseFragment<SearchFragmentView, SearchFragm
     }
 
     @Override
-    public void setItems(List<? extends ShortMovieModel> items) {
+    public void setItems(List<ShortMovieModel> items) {
         adapter.swapItems(items);
         binding.foundResult.setText(items.size() == 1 ? getString(R.string.search_result_found_one) : getString(R.string.search_result_found_plural, items.size()));
     }
 
     @Override
     public void error(String error) {
-        Snackbar.make(binding.rootLayout, error, Snackbar.LENGTH_SHORT).show();
+        if (NetworkUtils.isNetworkConnected(getContext())) {
+            Snackbar.make(binding.rootLayout, error, Snackbar.LENGTH_LONG).show();
+        } else {
+            Snackbar.make(binding.rootLayout, R.string.disable_network, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.retry, (view) -> presenter.retry()).show();
+        }
+    }
+
+    @Override
+    public void showProgressBar() {
+        binding.setProgressBar(true);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        binding.setProgressBar(false);
     }
 }

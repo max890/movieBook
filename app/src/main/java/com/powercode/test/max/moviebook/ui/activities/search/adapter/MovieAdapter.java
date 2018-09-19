@@ -14,7 +14,7 @@ import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ShortMovieHolder> {
 
-    private List<? extends ShortMovieModel> items = Collections.emptyList();
+    private List<ShortMovieModel> items = Collections.emptyList();
 
     @NonNull
     @Override
@@ -37,7 +37,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ShortMovieHo
     }
 
 
-    public void swapItems(List<? extends ShortMovieModel> items) {
+    public void swapItems(List<ShortMovieModel> items) {
         final DiffCallback callback = new DiffCallback(this.items, items);
         final DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback);
         this.items = items;
@@ -51,10 +51,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ShortMovieHo
 
     private static class DiffCallback extends DiffUtil.Callback {
 
-        private final List<? extends ShortMovieModel> oldItems;
-        private final List<? extends ShortMovieModel> newItems;
+        private final List<ShortMovieModel> oldItems;
+        private final List<ShortMovieModel> newItems;
 
-        public DiffCallback(List<? extends ShortMovieModel> oldItems, List<? extends ShortMovieModel> newItems) {
+        public DiffCallback(List<ShortMovieModel> oldItems, List<ShortMovieModel> newItems) {
             this.oldItems = oldItems;
             this.newItems = newItems;
         }

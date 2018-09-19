@@ -13,7 +13,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class SearchFragmentPresenterImpl extends SearchFragmentPresenter {
 
@@ -42,6 +44,8 @@ public class SearchFragmentPresenterImpl extends SearchFragmentPresenter {
                     .map(shortMovieModels -> {
                         return movieDao.getMovies();
                     })
+                    .doOnSubscribe(__ -> view.showProgressBar())
+                    .doOnTerminate(() -> view.hideProgressBar())
                     .compose(RxUtils.asyncObservable())
                     .subscribe(detailsMovieModels -> runOnView(view -> {
                         view.setItems(detailsMovieModels);
@@ -57,20 +61,29 @@ public class SearchFragmentPresenterImpl extends SearchFragmentPresenter {
     @Override
     public void search(String search) {
         if (!TextUtils.isEmpty(search.trim())) {
-            page = 1;
-            movies.clear();
-            searchText = search;
-            loading = true;
-            runOnView(view -> {
-                view.setItems(movies);
-            }, true);
-            loadPage(search);
+            Disposable disposable = Single.just("")
+                    .subscribeOn(Schedulers.io())
+                    .map(s -> movieDao.deleteAll())
+                    .subscribe(rs -> {
+                        page = 1;
+                        movies.clear();
+                        searchText = search;
+                        loading = true;
+                        runOnView(view -> {
+                            view.setItems(movies);
+                        }, true);
+                        loadPage(search);
+                    });
+            getCompositeDisposable().add(disposable);
+
         }
     }
 
     private void loadPage(String search) {
         Disposable disposable = api.searchMovies(search, page)
                 .compose(RxUtils.asyncSingle())
+                .doOnSubscribe(__ -> view.showProgressBar())
+                .doAfterTerminate(() -> view.hideProgressBar())
                 .subscribe(searchMovieModel -> {
                     if (!searchMovieModel.getResponse()) {
                         runOnView(item -> {
@@ -88,6 +101,8 @@ public class SearchFragmentPresenterImpl extends SearchFragmentPresenter {
                                 .compose(RxUtils.asyncObservable())
                                 .subscribe();
                     }
+                }, throwable -> {
+                    view.error(throwable.getMessage());
                 });
 
         getCompositeDisposable().add(disposable);
@@ -104,7 +119,7 @@ public class SearchFragmentPresenterImpl extends SearchFragmentPresenter {
 
     @Override
     public void retry() {
-
+        loadPage(searchText);
     }
 
     public boolean isLoading() {
