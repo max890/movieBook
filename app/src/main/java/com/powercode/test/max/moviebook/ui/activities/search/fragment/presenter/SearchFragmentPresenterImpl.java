@@ -3,9 +3,12 @@ package com.powercode.test.max.moviebook.ui.activities.search.fragment.presenter
 import android.text.TextUtils;
 
 import com.powercode.test.max.moviebook.model.api.SearchMovieApi;
+import com.powercode.test.max.moviebook.model.db.dao.HistoryMovieDao;
 import com.powercode.test.max.moviebook.model.db.dao.ShortMovieDao;
+import com.powercode.test.max.moviebook.model.entity.SearchHistoryModel;
 import com.powercode.test.max.moviebook.model.entity.ShortMovieModel;
 import com.powercode.test.max.moviebook.model.utils.RxUtils;
+import com.powercode.test.max.moviebook.ui.activities.search.fragment.view.SearchFragmentView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,8 @@ public class SearchFragmentPresenterImpl extends SearchFragmentPresenter {
 
     @Inject
     ShortMovieDao movieDao;
+    @Inject
+    HistoryMovieDao historyMovieDao;
 
     private List<ShortMovieModel> movies;
     private int page;
@@ -44,8 +49,8 @@ public class SearchFragmentPresenterImpl extends SearchFragmentPresenter {
                     .map(shortMovieModels -> {
                         return movieDao.getMovies();
                     })
-                    .doOnSubscribe(__ -> view.showProgressBar())
-                    .doOnTerminate(() -> view.hideProgressBar())
+                    .doOnSubscribe(__ -> runOnView(SearchFragmentView::showProgressBar, true))
+                    .doOnTerminate(() -> runOnView(SearchFragmentView::hideProgressBar, true))
                     .compose(RxUtils.asyncObservable())
                     .subscribe(detailsMovieModels -> runOnView(view -> {
                         view.setItems(detailsMovieModels);
@@ -82,8 +87,8 @@ public class SearchFragmentPresenterImpl extends SearchFragmentPresenter {
     private void loadPage(String search) {
         Disposable disposable = api.searchMovies(search, page)
                 .compose(RxUtils.asyncSingle())
-                .doOnSubscribe(__ -> view.showProgressBar())
-                .doAfterTerminate(() -> view.hideProgressBar())
+                .doOnSubscribe(__ -> runOnView(SearchFragmentView::showProgressBar, true))
+                .doAfterTerminate(() -> runOnView(SearchFragmentView::hideProgressBar, true))
                 .subscribe(searchMovieModel -> {
                     if (!searchMovieModel.getResponse()) {
                         runOnView(item -> {
@@ -101,8 +106,49 @@ public class SearchFragmentPresenterImpl extends SearchFragmentPresenter {
                                 .compose(RxUtils.asyncObservable())
                                 .subscribe();
                     }
+                    Observable.just(search)
+                            .map(s -> {
+                                int size = historyMovieDao.getSize();
+                                if (size >= 20) {
+                                    Observable.fromIterable(historyMovieDao.getHistories())
+                                            .map(historyModel -> {
+                                                if (historyModel.position == 1) {
+                                                    historyMovieDao.delete(historyModel);
+                                                }
+                                                return historyModel;
+                                            })
+                                            .filter(historyModel -> historyModel.position != 1)
+                                            .map(historyModel -> {
+                                                historyModel.position = historyModel.position - 1;
+                                                return historyModel;
+                                            })
+                                            .toList()
+                                            .map(searchHistoryModels -> {
+                                                SearchHistoryModel searchHistoryModel = new SearchHistoryModel();
+                                                searchHistoryModel.search = search;
+                                                searchHistoryModel.timestamp = System.currentTimeMillis();
+                                                searchHistoryModel.position = 20;
+                                                searchHistoryModels.add(searchHistoryModel);
+                                                historyMovieDao.insertAll(searchHistoryModels);
+                                                return searchHistoryModels;
+                                            }).subscribe();
+                                } else {
+                                    Observable.just(search)
+                                            .map(s1 -> {
+                                                SearchHistoryModel searchHistoryModel = new SearchHistoryModel();
+                                                searchHistoryModel.search = search;
+                                                searchHistoryModel.timestamp = System.currentTimeMillis();
+                                                searchHistoryModel.position = historyMovieDao.getMaxPosition() + 1;
+                                                return historyMovieDao.insert(searchHistoryModel);
+                                            }).subscribe();
+
+                                }
+                                return s;
+                            })
+                            .subscribeOn(Schedulers.io())
+                            .subscribe();
                 }, throwable -> {
-                    view.error(throwable.getMessage());
+                    runOnView(view -> view.error(throwable.getMessage()), true);
                 });
 
         getCompositeDisposable().add(disposable);

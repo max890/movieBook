@@ -35,6 +35,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ShortMovieHo
     @Override
     public void onBindViewHolder(@NonNull ShortMovieHolder holder, int position) {
         ShortMovieModel model = items.get(position);
+        holder.binding.setHolder(holder);
         holder.binding.setMovie(model);
     }
 
