@@ -21,7 +21,7 @@ public abstract class HistoryActivityModule {
     abstract AppCompatActivity bindActivity(final HistoryActivity activity);
 
     @Binds @PerActivity
-    abstract HistoryActivityView bindSearchActivityView(final HistoryActivity activity);
+    abstract HistoryActivityView bindHistoryActivityView(final HistoryActivity activity);
 
     @ContributesAndroidInjector(modules = HistoryFragmentModule.class)
     @PerFragment
