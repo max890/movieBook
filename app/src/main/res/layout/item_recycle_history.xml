@@ -7,7 +7,7 @@
             type="com.powercode.test.max.moviebook.model.entity.SearchHistoryModel"/>
 
         <variable name="holder"
-            type="com.powercode.test.max.moviebook.ui.activities.history.adapter.HistoryAdapter"/>
+            type="com.powercode.test.max.moviebook.ui.activities.history.adapter.HistoryAdapter.HistoryHolder"/>
     </data>
 
     <android.support.constraint.ConstraintLayout

@@ -49,8 +49,8 @@ public class SearchFragmentPresenterImpl extends SearchFragmentPresenter {
                     .map(shortMovieModels -> {
                         return movieDao.getMovies();
                     })
-                    .doOnSubscribe(__ -> view.showProgressBar())
-                    .doOnTerminate(() -> view.hideProgressBar())
+                    .doOnSubscribe(__ -> runOnView(SearchFragmentView::showProgressBar, true))
+                    .doOnTerminate(() -> runOnView(SearchFragmentView::hideProgressBar, true))
                     .compose(RxUtils.asyncObservable())
                     .subscribe(detailsMovieModels -> runOnView(view -> {
                         view.setItems(detailsMovieModels);
@@ -108,12 +108,44 @@ public class SearchFragmentPresenterImpl extends SearchFragmentPresenter {
                     }
                     Observable.just(search)
                             .map(s -> {
-                                SearchHistoryModel searchHistoryModel = new SearchHistoryModel();
-                                searchHistoryModel.search = search;
-                                searchHistoryModel.timestamp = System.currentTimeMillis();
-                                searchHistoryModel.position = historyMovieDao.getMaxPosition();
-                                return historyMovieDao.insert(searchHistoryModel);
-                            }).subscribeOn(Schedulers.io())
+                                int size = historyMovieDao.getSize();
+                                if (size >= 20) {
+                                    Observable.fromIterable(historyMovieDao.getHistories())
+                                            .map(historyModel -> {
+                                                if (historyModel.position == 1) {
+                                                    historyMovieDao.delete(historyModel);
+                                                }
+                                                return historyModel;
+                                            })
+                                            .filter(historyModel -> historyModel.position != 1)
+                                            .map(historyModel -> {
+                                                historyModel.position = historyModel.position - 1;
+                                                return historyModel;
+                                            })
+                                            .toList()
+                                            .map(searchHistoryModels -> {
+                                                SearchHistoryModel searchHistoryModel = new SearchHistoryModel();
+                                                searchHistoryModel.search = search;
+                                                searchHistoryModel.timestamp = System.currentTimeMillis();
+                                                searchHistoryModel.position = 20;
+                                                searchHistoryModels.add(searchHistoryModel);
+                                                historyMovieDao.insertAll(searchHistoryModels);
+                                                return searchHistoryModels;
+                                            }).subscribe();
+                                } else {
+                                    Observable.just(search)
+                                            .map(s1 -> {
+                                                SearchHistoryModel searchHistoryModel = new SearchHistoryModel();
+                                                searchHistoryModel.search = search;
+                                                searchHistoryModel.timestamp = System.currentTimeMillis();
+                                                searchHistoryModel.position = historyMovieDao.getMaxPosition() + 1;
+                                                return historyMovieDao.insert(searchHistoryModel);
+                                            }).subscribe();
+
+                                }
+                                return s;
+                            })
+                            .subscribeOn(Schedulers.io())
                             .subscribe();
                 }, throwable -> {
                     runOnView(view -> view.error(throwable.getMessage()), true);
