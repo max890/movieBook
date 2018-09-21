@@ -15,6 +15,7 @@ public class DetailsFragmentPresenterImpl extends DetailsFragmentPresenter {
     SearchMovieApi movieApi;
 
     private DetailsMovieModel movieModel;
+    private String movieId;
 
 
     @Inject
@@ -23,11 +24,17 @@ public class DetailsFragmentPresenterImpl extends DetailsFragmentPresenter {
 
     @Override
     public void init(String movieId) {
+        this.movieId = movieId;
         if (movieModel == null) {
             load(movieId);
         } else {
             runOnView(item -> item.showMovie(movieModel), true);
         }
+    }
+
+    @Override
+    public void retry() {
+        load(movieId);
     }
 
     private void load(String movieId) {

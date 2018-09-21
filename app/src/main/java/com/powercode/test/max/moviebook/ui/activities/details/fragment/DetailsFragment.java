@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 
 import com.powercode.test.max.moviebook.R;
+import com.powercode.test.max.moviebook.app.utils.NetworkUtils;
 import com.powercode.test.max.moviebook.databinding.FragmentDetailsBinding;
 import com.powercode.test.max.moviebook.model.entity.DetailsMovieModel;
 import com.powercode.test.max.moviebook.ui.activities.base.fragment.BaseFragment;
@@ -55,7 +56,12 @@ public class DetailsFragment extends BaseFragment<DetailsFragmentView, DetailsFr
 
     @Override
     public void error(String error) {
-        Snackbar.make(binding.getRoot(), error, Snackbar.LENGTH_LONG).show();
+        if (NetworkUtils.isNetworkConnected(getContext())) {
+            Snackbar.make(binding.getRoot(), error, Snackbar.LENGTH_LONG).show();
+        } else {
+            Snackbar.make(binding.getRoot(), R.string.disable_network, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.retry, (view) -> presenter.retry()).show();
+        }
     }
 
     @Override

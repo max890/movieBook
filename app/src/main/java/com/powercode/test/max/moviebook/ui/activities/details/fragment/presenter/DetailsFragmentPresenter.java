@@ -6,4 +6,6 @@ import com.powercode.test.max.moviebook.ui.activities.details.fragment.view.Deta
 public abstract class DetailsFragmentPresenter extends BasePresenter<DetailsFragmentView> {
 
     public abstract void init(String movieId);
+
+    public abstract void retry();
 }
