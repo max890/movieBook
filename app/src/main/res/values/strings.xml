@@ -6,4 +6,12 @@
     <string name="not_found">Not found</string>
     <string name="retry">Retry</string>
     <string name="disable_network">Network is not ready. Try again.</string>
+
+    <string name="details_title">%s, %s. released %s</string>
+    <string name="crew">Crew</string>
+    <string name="director">Director</string>
+    <string name="Writer">Writer</string>
+    <string name="Actors">Actors</string>
+    <string name="reception">Reception</string>
+    <string name="plot">Plot</string>
 </resources>

@@ -21,6 +21,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activities.history.HistoryActivity" />
+        <activity android:name=".ui.activities.details.DetailsActivity"
+            android:theme="@style/Theme.Design.NoActionBar"/>
     </application>
 
 </manifest>

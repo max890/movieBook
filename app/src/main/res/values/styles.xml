@@ -8,4 +8,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="GridStyle" >
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:background">#fff</item>
+        <item name="android:padding">5dp</item>
+    </style>
+
 </resources>
