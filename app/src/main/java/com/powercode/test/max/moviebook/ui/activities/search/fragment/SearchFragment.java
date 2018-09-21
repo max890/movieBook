@@ -20,6 +20,7 @@ import com.powercode.test.max.moviebook.app.utils.NetworkUtils;
 import com.powercode.test.max.moviebook.databinding.FragmentSearchBinding;
 import com.powercode.test.max.moviebook.model.entity.ShortMovieModel;
 import com.powercode.test.max.moviebook.ui.activities.base.fragment.BaseFragment;
+import com.powercode.test.max.moviebook.ui.activities.details.DetailsActivity;
 import com.powercode.test.max.moviebook.ui.activities.history.HistoryActivity;
 import com.powercode.test.max.moviebook.ui.activities.search.adapter.MovieAdapter;
 import com.powercode.test.max.moviebook.ui.activities.search.fragment.presenter.SearchFragmentPresenter;
@@ -160,7 +161,7 @@ public class SearchFragment extends BaseFragment<SearchFragmentView, SearchFragm
 
     @Override
     public void onItemClick(ShortMovieModel item) {
-        Log.d("SearchFragment", "Item click: " + item.Title);
+        DetailsActivity.start(getContext(), item.id);
     }
 
     @Override

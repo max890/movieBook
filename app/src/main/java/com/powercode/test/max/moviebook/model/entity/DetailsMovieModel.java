@@ -1,7 +1,5 @@
 package com.powercode.test.max.moviebook.model.entity;
 
-import android.arch.persistence.room.Ignore;
-
 import java.util.List;
 
 public class DetailsMovieModel extends ShortMovieModel {
@@ -12,7 +10,6 @@ public class DetailsMovieModel extends ShortMovieModel {
     public String Actors;
     public String Plot;
     public String Country;
-    @Ignore
     public List<RatingMovieModel> Ratings;
     public String Production;
     public String Website;

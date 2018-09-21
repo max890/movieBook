@@ -29,8 +29,8 @@ public class BindingAdapters {
         }
     }
 
-    @BindingAdapter(value = "bindImage")
-    public static void setImageUri(final ImageView view, @Nullable String url) {
+    @BindingAdapter(value = "bindCircleImage")
+    public static void setCircleImageUri(final ImageView view, @Nullable String url) {
         if (TextUtils.isEmpty(url)) {
             Picasso.with(view.getContext())
                     .load(android.R.drawable.ic_menu_report_image)
@@ -44,6 +44,21 @@ public class BindingAdapters {
                     .into(view);
         }
     }
+
+    @BindingAdapter(value = "bindImage")
+    public static void setImageUri(final ImageView view, @Nullable String url) {
+        if (TextUtils.isEmpty(url)) {
+            Picasso.with(view.getContext())
+                    .load(android.R.drawable.ic_menu_report_image)
+                    .into(view);
+        } else {
+            Picasso.with(view.getContext())
+                    .load(url)
+                    .placeholder(android.R.drawable.ic_menu_report_image)
+                    .into(view);
+        }
+    }
+
 
     public interface OnClickListener {
         void onClick();
